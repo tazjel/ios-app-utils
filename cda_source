@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Change to App Directory.
+cda(){
+
+if [ ! -z "$1" ]; then
+
+	if [ "$1" == "-r" ]; then
+		rebuildappdb
+		search=$2;
+	else
+		search=$1
+	fi
+
+	UUID=`sqlite3 /usr/local/db/app.db "SELECT UUID FROM applications WHERE name LIKE '%$search%'"`
+
+	if [ -z $UUID ]; then
+		echo "App not found."
+	else
+		cd /var/mobile/Applications/$UUID
+	fi
+fi
+
+}

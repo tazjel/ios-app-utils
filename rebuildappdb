@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Rebuild App Database
+# @description rebuilds the application database.
+
+# If there is no db directory then make it.
+if [ ! -d /usr/local/db ]; then
+	sudo mkdir -p /usr/local/db
+fi
+
+# Delete a previous database if it exists.
+rm -f /usr/local/db/app.db
+
+# Create a new database.
+sqlite3 /usr/local/db/app.db "CREATE TABLE applications(name VARCHAR(255), UUID(255))"
+
+# Find apps.
+for app in /var/mobile/Applications/*; do
+	NAME=`ls $app/ | grep .app | sed 's/\.app//'`
+	UUID=`echo $app | sed 's#/var/mobile/Applications/##'`
+	sqlite3 /usr/local/db/app.db "INSERT INTO applications (name, uuid) VALUES('$NAME','$UUID')"
+done

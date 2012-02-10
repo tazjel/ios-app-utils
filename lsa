@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# List applications.
+
+if [ -z "$1" ]; then
+
+	sqlite3 /usr/local/db/app.db "SELECT name FROM applications"
+
+else
+	if [ "$1" == "-u" ]; then
+		sqlite3 /usr/local/db/app.db "SELECT * FROM applications" | sed 's/|/ - /g'
+	else
+		echo "List UUIDs with -u."
+	fi
+fi
